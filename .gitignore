@@ -1,0 +1,7 @@
+media
+*/migrations/*
+*.db
+*.sqlite3
+*.dot
+*.png
+*.csv

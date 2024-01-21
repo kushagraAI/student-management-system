@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    <link rel="stylesheet"
+     href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-grid.css"/>
+   <link rel="stylesheet"
+     href="https://cdn.jsdelivr.net/npm/ag-grid-community/styles/ag-theme-alpine.css"/>
+
+    <title>Habrie</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+<div style="margin:1%">
+    <a href="/">HOME</a>
+</div>
+<div id="myGrid" class="ag-theme-alpine" style="height: 519px"></div>
+<input id="upload_doc" type="file" accept=".csv" style="display:none"/>
+<a href="" id="upload_doc_link">Choose document</a>
+<button onclick="uploadBulkFile()"> Bulk upload </button>
+
+<a href="/student/download_sample" style="margin-left:60%"> Download Sample </a>
+
+</body>
+<script>
+    $(function(){
+        $("#upload_doc_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_doc:hidden").trigger('click');
+        });
+    });
+    // Grid Options are properties passed to the grid
+    const gridOptions = {
+
+     // each entry here represents one column
+     columnDefs: [
+        {'field': 'enrollment_id', headerName: "Enrollment ID"},
+        {'field': 'name', headerName: "Name"},
+        {'field': 'academic_class', headerName: "Class"},
+        {'field': 'section', headerName: "Section"},
+        {'field': 'doj', headerName: "Date of joining"},
+        {'field': 'adhar_number', headerName: "Adhaar Number"},
+        {'field': 'dob', headerName: "Date of birth"},
+        {'field': 'identification_marks', headerName: "Identification Marks"},
+        {'field': 'category', headerName: "Category"},
+        {'field': 'height', headerName: "Height"},
+        {'field': 'weight', headerName: "Weight"},
+        {'field': 'mail_id', headerName: "Email ID"},
+        {'field': 'contact_detail', headerName: "Contact Details"},
+        {'field': 'address', headerName: "Address"},
+        {'field': 'fathers_name', headerName: "Father's Name"},
+        {'field': 'fathers_qualification', headerName: "Father's Qualification"},
+        {'field': 'fathers_profession', headerName: "Father's Profession"},
+        {'field': 'fathers_designation', headerName: "Father's Designation"},
+        {'field': 'fathers_adhar_card', headerName: "Father's Adhaar Number"},
+        {'field': 'fathers_mobile_no', headerName: "Father's Contact Details"},
+        {'field': 'fathers_mail_id', headerName: "Father's Mail ID"},
+        {'field': 'mothers_name', headerName: "Mother's Name"},
+        {'field': 'mothers_qualification', headerName: "Mother's Qualification"},
+        {'field': 'mothers_profession', headerName: "Mother's Profession"},
+        {'field': 'mothers_designation', headerName: "Mother's Designation"},
+        {'field': 'mothers_adhar_card', headerName: "Mother's Adhaar Number"},
+        {'field': 'mothers_mobile_no', headerName: "Mother's Contact Details"},
+        {'field': 'mothers_mail_id', headerName: "Mother's Mail ID"}
+    ],
+
+     // default col def properties get applied to all columns
+     defaultColDef: {sortable: true, filter: true},
+
+     rowSelection: 'multiple', // allow rows to be selected
+     animateRows: true, // have rows animate to new positions when sorted
+     pagination: true,
+     paginationPageSize: 10,
+
+     // example event handler
+     onCellClicked: params => {
+       console.log('cell was clicked', params.data.enrollment_id);
+       window.location = `${location.origin}/student/student/${params.data.student}`;
+     },
+
+     // Pagination
+     onPaginationChanged: params => {
+            if (params.newPage) {
+                const currentPage = gridOptions.api.paginationGetCurrentPage();
+                if (params.data <= (currentPage * gridOptions.api.paginationPageSize)) {
+
+                }
+            }
+        }
+    };
+
+    // get div to host the grid
+    const eGridDiv = document.getElementById("myGrid");
+    // new grid instance, passing in the hosting DIV and Grid Options
+    new agGrid.Grid(eGridDiv, gridOptions);
+
+    window.onload = function() {
+        fetch(`/student/student`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            gridOptions.api.setRowData(data.students_data ? data.students_data : null);
+        });
+    }
+
+    async function uploadBulkFile() {
+        let formData = new FormData();
+        formData.append("file", upload_doc.files[0]);
+
+        fetch(`/student/upload?is_bulk_upload=true`,
+        {method: "POST", body: formData})
+        .then(response => response.json())
+        .then(data => {
+            if(!data.success) {
+                alert(data.error_message);
+            } else {
+                alert("File uploaded successfully!");
+            }
+        });
+    }
+</script>
+
+</html>

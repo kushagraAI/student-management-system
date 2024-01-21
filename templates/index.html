@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <title>Habrie</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+<img src="https://habrie.com/asset/img/logo.svg">
+
+<hr>
+<strong>Student section</strong>
+<ul>
+    <li><a href="/student">Enroll Student</a></li>
+    <li><a href="/student/list_students">List Students</a></li>
+</ul>
+
+</body>
+  <style>
+    body {
+    text-align: left;
+}
+
+#welcome {
+    color: #FFFFFF;
+    bottom: 0;
+    background: linear-gradient(#60ebeb 0%, #27ae60 100%);
+    display: table;
+    width: 100%;
+    height: 100%;
+    z-index: 9;
+}
+
+#upload, #upload_doc, #upload_image, #upload_pdf{
+    display:none
+}
+
+#bio {
+    font-family: 'Cinzel Decorative', cursive;
+    padding: 50px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 40px;
+    font-family: sans-serif;
+    font-weight: 300;
+}
+
+.line {
+    height: 6px;
+    background-color: #000;
+    width: 70px;
+    margin: 8px auto;
+}
+
+#contact iframe {
+    width: 100%;
+}
+
+.contact_1 h3 {
+    display: inline;
+}
+
+.contact_1 a {
+    text-shadow: none;
+}
+
+
+#videos iframe {
+    width: 80%;
+}
+
+
+input {
+    background: grey;
+}
+  </style>
+<script>
+    $(function(){
+        $("#upload_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload:hidden").trigger('click');
+        });
+        $("#upload_doc_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_doc:hidden").trigger('click');
+        });
+        $("#upload_image_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_image:hidden").trigger('click');
+        });
+        $("#upload_pdf_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_pdf:hidden").trigger('click');
+        });
+    });
+</script>
+
+</html>

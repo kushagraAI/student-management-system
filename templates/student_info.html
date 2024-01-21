@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <title>Habrie</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Cinzel+Decorative&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+
+<body>
+<!-- Student Profile -->
+<div class="student-profile py-4" id="body_div" style="display: none">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-header bg-transparent text-center">
+            <h3 id="student_name">Ishmam Ahasan Samin</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card shadow-sm">
+          <div class="card-header bg-transparent border-0">
+            <h3 class="mb-0">General Information</h3>
+          </div>
+          <div class="card-body pt-0">
+            <table class="table table-bordered">
+              <tr>
+                <th width="30%">Enrollment ID</th>
+                <td id="enrol_id"></td>
+              </tr>
+              <tr>
+                <th width="30%">Class</th>
+                <td id="student_class"></td>
+              </tr>
+              <tr>
+                <th width="30%">Section</th>
+                <td id="student_section"></td>
+              </tr>
+              <tr>
+                <th width="30%">Date of joining</th>
+                <td id="doj"></td>
+              </tr>
+              <tr>
+                <th width="30%">Email ID</th>
+                <td id="mail_id"></td>
+              </tr>
+              <tr>
+                <th width="30%">Contact detail</th>
+                <td id="contact_detail"></td>
+              </tr>
+              <tr>
+                <th width="30%">Father name</th>
+                <td id="fathers_name"></td>
+              </tr>
+              <tr>
+                <th width="30%">Father mobile number</th>
+                <td id="fathers_mobile_no"></td>
+              </tr>
+              <tr>
+                <th width="30%">Father email ID</th>
+                <td id="fathers_mail_id"></td>
+              </tr>
+              <tr>
+                <th width="30%">Mother name</th>
+                <td id="mothers_name"></td>
+              </tr>
+              <tr>
+                <th width="30%">Mother mobile number</th>
+                <td id="mothers_mobile_no"></td>
+              </tr>
+              <tr>
+                <th width="30%">Mother email ID</th>
+                <td id="mothers_mail_id"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+<!--    <input id="upload_doc" type="file" accept=".csv" style="display:none"/>-->
+<!--    <a href="" id="upload_doc_link">Choose document</a>-->
+<!--    <button onclick="uploadFile(3)"> Upload </button>-->
+
+    <input id="upload_pdf" type="file" accept="application/pdf" style="display:none"/>
+    <a href="" id="upload_pdf_link" style="padding-left: 15%">Choose PDF</a>
+    <button onclick="uploadFile(2)"> Upload </button>
+
+    <input id="upload_image" type="file" accept=".jpeg, .jpg, .png" style="display:none"/>
+    <a href="" id="upload_image_link" style="padding-left: 15%">Choose Image</a>
+    <button onclick="uploadFile(1)"> Upload </button>
+  </div>
+</div>
+
+</body>
+<style rel="stylesheet" type="text/css">
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  color: #000;
+}
+
+.student-profile .card {
+  border-radius: 10px;
+}
+
+.student-profile .card .card-header .profile_img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin: 10px auto;
+  border: 10px solid #ccc;
+  border-radius: 50%;
+}
+
+.student-profile .card h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.student-profile .card p {
+  font-size: 16px;
+  color: #000;
+}
+
+.student-profile .table th,
+.student-profile .table td {
+  font-size: 14px;
+  padding: 5px 10px;
+  color: #000;
+}
+  </style>
+<script>
+    $(function(){
+        $("#upload_doc_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_doc:hidden").trigger('click');
+        });
+        $("#upload_image_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_image:hidden").trigger('click');
+        });
+        $("#upload_pdf_link").on('click', function(e){
+            e.preventDefault();
+            $("#upload_pdf:hidden").trigger('click');
+        });
+    });
+
+    async function uploadFile(file_type) {
+        let formData = new FormData();
+        formData.append("id", location.pathname.split('/').at(-1));
+
+        if(file_type == 1) {
+          formData.append("file", upload_image.files[0]);
+        } else if(file_type == 2) {
+          formData.append("file", upload_pdf.files[0]);
+        } else {
+          formData.append("file", upload_doc.files[0]);
+        }
+
+        fetch(`/student/upload?student_enroll_id=${location.pathname.split('/').at(-1)}`,
+        {method: "POST", body: formData})
+        .then(response => response.json())
+        .then(data => {
+          if(!data.success){
+            alert(data.error_message);
+          } else {
+            alert("File uploaded successfully");
+          }
+        });
+    }
+    window.onload = function() {
+        fetch(`/student/student?student_enroll_id=${location.pathname.split('/').at(-1)}`)
+        .then(response => {
+          if(!response.ok) {
+            window.location = `${location.origin}/student/404`;
+          } else {
+            response.json().then(data => {
+              console.log(data);
+              if(data.students_data.length > 0) {
+                data = data.students_data[0];
+                document.getElementById('student_name').innerHTML = data.name;
+                document.getElementById('enrol_id').innerHTML = data.enrollment_id;
+                document.getElementById('student_class').innerHTML = data.academic_class;
+                document.getElementById('student_section').innerHTML = data.section;
+                document.getElementById('doj').innerHTML = data.doj;
+                document.getElementById('mail_id').innerHTML = data.mail_id;
+                document.getElementById('contact_detail').innerHTML = data.contact_detail;
+                document.getElementById('fathers_name').innerHTML = data.fathers_name;
+                document.getElementById('fathers_mobile_no').innerHTML = data.fathers_mobile_no;
+                document.getElementById('fathers_mail_id').innerHTML = data.fathers_mail_id;
+                document.getElementById('mothers_name').innerHTML = data.mothers_name;
+                document.getElementById('mothers_mobile_no').innerHTML = data.mothers_mobile_no;
+                document.getElementById('mothers_mail_id').innerHTML = data.mothers_mail_id;
+                document.getElementById('body_div').style.display = "block";
+              };
+            });
+          }
+        });
+    }
+</script>
+
+</html>
